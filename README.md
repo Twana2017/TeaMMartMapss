@@ -1,1 +1,277 @@
-# TeaMMartMapss
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>TeaMMart Maps · Blue & Orange</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { font-family:'Inter',sans-serif; background:linear-gradient(145deg,#f0f4fe 0%,#fef6ed 100%); min-height:100vh; overflow-x:hidden; }
+        .preloader { position:fixed; top:0; left:0; width:100%; height:100%; background:#ffffff; z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity 0.5s ease; }
+        .preloader.fade-out { opacity:0; pointer-events:none; }
+        .preloader-content { text-align:center; padding:20px; }
+        .preloader-logo { width:120px; height:120px; border-radius:35px; object-fit:cover; margin:0 auto 20px; border:4px solid white; box-shadow:0 15px 25px rgba(0,102,204,0.2); background:#f0f4f9; }
+        .preloader-brand { font-size:32px; font-weight:800; letter-spacing:-0.5px; }
+        .preloader-brand .team { color:#0066CC; }
+        .preloader-brand .mart { color:#FF7D00; }
+        .preloader-brand .maps { color:#1E2A3A; font-weight:500; }
+        .preloader-bar { width:240px; height:4px; background:#E2E8F0; border-radius:20px; margin:20px auto 0; overflow:hidden; }
+        .preloader-progress { width:0%; height:100%; background:#FF7D00; animation:loadProgress 1.4s ease forwards; }
+        @keyframes loadProgress { to { width:100%; } }
+        .app-container { max-width:100%; margin:0 auto; padding:16px; }
+        .credit-banner { background:linear-gradient(135deg,#0066CC 0%,#FF7D00 100%); color:white; padding:14px 20px; border-radius:60px; text-align:center; font-weight:600; font-size:16px; letter-spacing:0.5px; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,102,204,0.3); border:1px solid rgba(255,255,255,0.25); }
+        .credit-banner i { margin-right:10px; opacity:0.9; }
+        .credit-banner span { background:rgba(255,255,255,0.2); padding:2px 14px; border-radius:30px; font-weight:700; }
+        .header-card { background:white; border-radius:28px; padding:20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.05); border:1px solid #E9EDF2; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; }
+        .logo-area { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .logo-img { width:60px; height:60px; border-radius:20px; object-fit:cover; cursor:pointer; transition:transform 0.2s; box-shadow:0 6px 12px rgba(0,102,204,0.15); border:2px solid white; }
+        .logo-img:active { transform:scale(0.96); }
+        .brand h1 { font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+        .brand .team { color:#0066CC; }
+        .brand .mart { color:#FF7D00; }
+        .brand p { color:#475569; font-size:12px; margin-top:4px; }
+        .stat-badge { background:#EFF6FF; padding:10px 18px; border-radius:50px; display:flex; align-items:center; gap:10px; border-left:4px solid #FF7D00; }
+        .stat-badge i { font-size:28px; color:#FF7D00; }
+        .stat-number { font-size:32px; font-weight:800; color:#0B2B4A; line-height:1; }
+        .stat-label { font-size:11px; color:#475569; font-weight:500; }
+        .watermark { position:fixed; bottom:15px; right:15px; opacity:0.08; pointer-events:none; z-index:100; }
+        .watermark img { width:60px; height:60px; border-radius:16px; object-fit:cover; }
+        .actions-bar { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+        .search-wrap { width:100%; position:relative; }
+        .search-wrap i { position:absolute; left:18px; top:50%; transform:translateY(-50%); color:#FF7D00; font-size:16px; }
+        #searchInput { width:100%; padding:14px 20px 14px 48px; border:2px solid #E2E8F0; border-radius:50px; font-size:15px; background:white; transition:0.2s; }
+        #searchInput:focus { outline:none; border-color:#0066CC; box-shadow:0 0 0 3px rgba(0,102,204,0.1); }
+        .toggle-wrap { display:flex; background:white; padding:5px; border-radius:60px; border:1px solid #E2E8F0; margin-bottom:20px; width:fit-content; margin-left:auto; margin-right:auto; }
+        .toggle-btn { padding:10px 20px; border-radius:50px; border:none; background:transparent; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:14px; transition:0.2s; }
+        .toggle-btn.active { background:#FF7D00; color:white; box-shadow:0 2px 8px rgba(255,125,0,0.3); }
+        .toggle-btn:active { transform:scale(0.96); }
+        .grid-view { display:grid; grid-template-columns:1fr; gap:16px; }
+        .market-card { background:white; border-radius:24px; padding:18px; border:1px solid #E9EDF2; transition:all 0.2s ease; cursor:pointer; position:relative; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+        .market-card:active { transform:scale(0.98); background:#F8FAFE; }
+        .card-header { display:flex; gap:14px; align-items:center; margin-bottom:12px; }
+        .card-icon { width:55px; height:55px; border-radius:18px; overflow:hidden; background:#EFF6FF; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .card-icon img { width:100%; height:100%; object-fit:cover; }
+        .card-title { font-size:18px; font-weight:700; color:#0F2B40; line-height:1.3; word-break:break-word; }
+        .address-line { display:flex; gap:10px; color:#475569; margin:12px 0 16px; font-size:13px; line-height:1.45; }
+        .address-line i { color:#0066CC; margin-top:2px; flex-shrink:0; }
+        .address-line span { word-break:break-word; }
+        .card-footer { display:flex; justify-content:flex-start; align-items:center; border-top:1px solid #EDF2F7; padding-top:14px; flex-wrap:wrap; gap:10px; }
+        .nav-btn { background:#EFF6FF; border:none; padding:8px 16px; border-radius:40px; font-weight:500; display:flex; gap:8px; align-items:center; cursor:pointer; color:#0066CC; font-size:13px; transition:0.2s; text-decoration:none; }
+        .nav-btn:active { background:#0066CC; color:white; transform:scale(0.96); }
+        .phone-btn { background:#fff0e6; color:#FF7D00; }
+        .phone-btn:active { background:#FF7D00; color:white; }
+        .card-badge { position:absolute; bottom:12px; right:12px; display:flex; align-items:center; gap:4px; font-size:10px; color:#FF7D00; opacity:0.4; }
+        .card-badge img { width:22px; height:22px; border-radius:6px; object-fit:cover; }
+        .table-view { display:none; background:white; border-radius:24px; overflow-x:auto; border:1px solid #E9EDF2; -webkit-overflow-scrolling:touch; }
+        .table-view.active-view { display:block; }
+        .market-table { width:100%; border-collapse:collapse; min-width:600px; }
+        .market-table th { text-align:left; padding:14px 16px; background:#F8FAFE; color:#1E293B; font-weight:600; font-size:13px; border-bottom:2px solid #E9EDF2; }
+        .market-table td { padding:12px 16px; border-bottom:1px solid #F0F2F5; vertical-align:middle; font-size:13px; }
+        .market-table tr { cursor:pointer; transition:0.1s; }
+        .market-table tr:active { background:#F1F5F9; }
+        .table-logo { width:36px; height:36px; border-radius:10px; object-fit:cover; margin-right:10px; vertical-align:middle; }
+        .market-table td a { font-size:12px; }
+        footer { margin-top:40px; text-align:center; font-size:11px; color:#5B6E8C; border-top:1px solid #E2E8F0; padding-top:20px; padding-bottom:10px; }
+        #toastMsg { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#0F2B40; color:white; padding:12px 28px; border-radius:60px; font-weight:500; font-size:14px; opacity:0; transition:opacity 0.3s ease; pointer-events:none; z-index:99999; box-shadow:0 10px 30px rgba(0,0,0,0.2); }
+        #toastMsg.show { opacity:1; }
+        @media (min-width:640px) { .app-container { padding:20px 24px; } .grid-view { grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); } .actions-bar { flex-direction:row; } .brand h1 { font-size:36px; } }
+        @media (min-width:1024px) { .grid-view { grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); } .brand h1 { font-size:44px; } }
+    </style>
+</head>
+<body>
+<div class="preloader" id="preloader">
+    <div class="preloader-content">
+        <img src="teammartmaps.jpg" alt="TeaMMart" class="preloader-logo" onerror="this.src='https://placehold.co/120x120/0066CC/white?text=TM'">
+        <div class="preloader-brand"><span class="team">TeaM</span><span class="mart">Mart</span><span class="maps">Maps</span></div>
+        <div class="preloader-bar"><div class="preloader-progress"></div></div>
+    </div>
+</div>
+<div class="app-container">
+    <div class="credit-banner"><i class="fas fa-code"></i> Create By <span>Twana Khasro IT</span> <i class="fas fa-map-marked-alt"></i></div>
+    <div class="header-card">
+        <div class="logo-area">
+            <img src="teammartmaps.jpg" alt="TeamMart" class="logo-img" onclick="window.open('https://www.google.com/maps','_blank')" onerror="this.src='https://placehold.co/60x60/0066CC/white?text=TM'">
+            <div class="brand"><h1><span class="team">TeaM</span><span class="mart">Mart</span> <span style="color:#1E2A3A;">Maps</span></h1><p>First Chain in Iraq & Kurdistan</p></div>
+        </div>
+        <div class="stat-badge"><i class="fas fa-store"></i><div><span class="stat-number" id="totalCount">0</span><div class="stat-label">Markets</div></div></div>
+    </div>
+    <div class="actions-bar">
+        <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search market name..."></div>
+    </div>
+    <div class="toggle-wrap">
+        <button class="toggle-btn active" id="gridToggle"><i class="fas fa-th-large"></i> Grid</button>
+        <button class="toggle-btn" id="tableToggle"><i class="fas fa-table"></i> Table</button>
+    </div>
+    <div id="gridContainer" class="grid-view"></div>
+    <div id="tableContainer" class="table-view">
+        <table class="market-table"><thead><tr><th>Market</th><th>Address</th><th>Phone</th><th>Map</th></tr></thead><tbody id="tableBody"></tbody></table>
+    </div>
+    <footer><p>© 2026 TeamMart Maps</p></footer>
+</div>
+<div id="toastMsg"><span id="toastText"></span></div>
+<div class="watermark"><img src="teammartmaps.jpg" alt="TeamMart" onerror="this.style.display='none'"></div>
+<script>
+const ALL_MARKETS = [
+{id:17,name:"ئازادی فرێش",address:"ڕێزی گەس ئازادی",mapLink:"https://maps.app.goo.gl/8JNJiWn1Bnq5jayV6",phone:"07517411801"},
+{id:18,name:"ئەستێرە-١",address:"ڕێگای بنەسڵاوە",mapLink:"https://maps.app.goo.gl/gnbZYWnPDQc8hTm57?g_st=iw",phone:"07517411839"},
+{id:19,name:"ئەستێرە-٢",address:"ڕێگای بنەسڵاوە",mapLink:"https://maps.app.goo.gl/qimLDhShfvDSA4if7?g_st=iw",phone:"07517450546"},
+{id:20,name:"ئاڵتون ستی",address:"پشت مزگەوتی ئاڵتون",mapLink:"https://maps.app.goo.gl/AGvEncxGmqcgDjQ96",phone:"07517423695"},
+{id:21,name:"٣٢ پارک",address:"گەرەکی ٣٢ پارک",mapLink:"https://goo.gl/maps/Bx58BQ4PRzvPX5B3A",phone:"07517411876"},
+{id:22,name:"پاکلاند",address:"ڕێگای کۆیە بۆ هەولێر تەنیشت ماجدیلاند",mapLink:"https://maps.app.goo.gl/PnWPVaEc6ABtY9LD6",phone:"07517450536"},
+{id:23,name:"باکور٢",address:"جادەی بنەسڵاوەی کۆن",mapLink:"https://goo.gl/maps/r9VXYJFdud9ChD75A",phone:"07517419174"},
+{id:24,name:"بەختیاری٢",address:"گەرەکی بەختیاری فەرعی بەرام بەر مەکتەب بێرکۆت",mapLink:"https://maps.app.goo.gl/woeeFH1KMKqPyqj77?g_st=iw",phone:"07517411874"},
+{id:25,name:"بەردەڕەش",address:"بەرامبەر ئەفرین پارک",mapLink:"https://maps.app.goo.gl/gaw5zMV7xMKJSPGTA?g_st=iw",phone:"07517411813"},
+{id:26,name:"بەستؤڕە",address:"بەستۆڕە تەنیشت دواناوەندی بەستۆڕەی ئێواران",mapLink:"https://maps.app.goo.gl/sMtV4UQJs8ib83ED8?g_st=iw",phone:"07517411986"},
+{id:27,name:"بەهاری نوێ",address:"جوت سایدی بەهاری نوێ",mapLink:"https://maps.app.goo.gl/5gbAEsnyN53JQw2v8",phone:"07517411862"},
+{id:28,name:"بەهەشت ١",address:"ڕێگای دارەتوو بەرامبەر مزگەوتی ڕێگای بەهەشت",mapLink:"https://goo.gl/maps/7hUQRNiMmxViGYXc8",phone:"07517419154"},
+{id:29,name:"بەحرکە-٤",address:"ڕێگای بەحرکە یەکەم مارکێت",mapLink:"https://maps.app.goo.gl/KkmJq1jRXQyKGBvcA",phone:"07517411877"},
+{id:30,name:"بەحرکە-٣",address:"جادەی بەحرکە فەرعی بانکی بحرکە",mapLink:"https://maps.app.goo.gl/hWPJxMca5xuzj3pr7?g_st=iw",phone:"07518014745"},
+{id:31,name:"بەحرکە-٢",address:"ڕێگای بەحرکە",mapLink:"https://maps.app.goo.gl/j1WRrNQoAar2Yv7d8?g_st=iw",phone:"07518020895"},
+{id:32,name:"بەحرکە-١",address:"ڕێگای بەحرکە",mapLink:"https://maps.app.goo.gl/Dh6XSskFFfkEqGiD8?g_st=iw",phone:"07517411879"},
+{id:33,name:"برایەتی-٢",address:"جادەی برایەتی بەرامبەر وەزارەتی کارەبا",mapLink:"https://goo.gl/maps/NeNe1jQPAmybbZvn7",phone:"07517423692"},
+{id:34,name:"بنەسڵاوە-٢",address:"ڕێگای بنەسڵاوە سێریانی بنەسڵاوە",mapLink:"https://maps.app.goo.gl/7vcSuu3vTDr3kP3J6",phone:"07517450563"},
+{id:35,name:"پیرزین-٢",address:"یەکەم مارکێت بە دەستی چەپ",mapLink:"https://maps.app.goo.gl/1uKst8wtgxXCEN5n9",phone:"07517411962"},
+{id:36,name:"پیرزین-١",address:"دووەم مارکێت بە دەستی راست ناو بازاڕی پیرزین",mapLink:"https://goo.gl/maps/pb1Fxg6zLMMn6SJy6",phone:"07517411890"},
+{id:37,name:"پیرمام-٢",address:"ناو پیرمام تەنیشت کۆمەڵگەی نەسیم",mapLink:"https://maps.app.goo.gl/cqFSx6dvBtGUth9E6",phone:"07517450543"},
+{id:38,name:"پیرمام-١",address:"جادەی پیرمام بەرامبەر نەخۆشخانەی کۆنی پیرمام",mapLink:"https://maps.app.goo.gl/WoCvendzbKxs5Zug8",phone:"07517411892"},
+{id:39,name:"تۆپزاوە",address:"ناو بازاری تۆپزاوە",mapLink:"https://maps.app.goo.gl/BUonvyhpCS439CFNA",phone:"07517411892"},
+{id:40,name:"حەسارۆک",address:"گەرەکی حەسارۆک جادەی کۆڕنیش",mapLink:"https://maps.app.goo.gl/ucNgR3Qo7JWb7KLb9?g_st=iw",phone:"07517450562"},
+{id:41,name:"خاتوناوە",address:"گەڕەکی خاتوناوە بەرامبەر قوتابخانەی شاهەنگ",mapLink:"https://maps.app.goo.gl/Yu989oWFnd3RkLQQ8",phone:"07517411852"},
+{id:42,name:"خەبات-١",address:"خەبات تەنیشت ناوچەی خەباتی پارتی دیموکراتی کوردستا",mapLink:"https://maps.app.goo.gl/nk6qdFbvyA1CdTTd8",phone:"07517411891"},
+{id:43,name:"خەبات-2",address:"بەرامبەر دەرمانخانەی دەروازەی خەبات",mapLink:"https://maps.app.goo.gl/nk6qdFbvyA1CdTTd8",phone:"07517450532"},
+{id:44,name:"کەلەک",address:"بەرامبەر مستشفى أسكي كلك",mapLink:"https://maps.app.goo.gl/15dpvPnPMBPoVx1R8",phone:"07517411837"},
+{id:45,name:"خەلیفان-١",address:"خەلیفان ڕێگای سپیلک",mapLink:"https://maps.app.goo.gl/PeatEmwEdCaUzV6x7",phone:"07517419168"},
+{id:46,name:"خەلیفان-٣",address:"رێزی مزگه‌وتى خێرخوازان",mapLink:"https://maps.app.goo.gl/6mKwmzMnJHLvYfwF6",phone:"07517411955"},
+{id:47,name:"دارەتوو-٣",address:"ڕێگای دارەتوو یەکەم ماڕکێت",mapLink:"https://maps.app.goo.gl/N1xgLi3qG4WVASTn6",phone:"07517411786"},
+{id:48,name:"دارەتوو-2",address:"ڕێزی یاریگای مەهدی کەریم",mapLink:"https://maps.app.goo.gl/iMH1Fm3jn2dACmfF9",phone:"07517411821"},
+{id:49,name:"دارەتوو-١",address:"ڕێزی یاریگای تۆپی پێی دارەتووی نوێ",mapLink:"https://maps.app.goo.gl/xQGuBMdFrqM7vmME6",phone:"07517450520"},
+{id:50,name:"ڕاپەڕین",address:"ناو بازاری حەی شورتە",mapLink:"https://maps.app.goo.gl/eBhEZcCpKqH6k4xZ6",phone:"07517411868"},
+{id:51,name:"ڕەواندز",address:"ڕێزی شیرنەمەنی کۆسار پڵەس",mapLink:"https://maps.app.goo.gl/4vpijgwLFZtUE6wT9",phone:"07517419169"},
+{id:52,name:"ڕۆشنبیران-١",address:"جادەی دارەتوو پشت باخچەی ڕۆشنبیری",mapLink:"https://maps.app.goo.gl/5XvEF87Qo84GX4xz8",phone:"07517411845"},
+{id:53,name:"ڕۆشنبیران-٢",address:"گەڕەکی رۆشەمبیران ڕیزی پەیمانگای شکۆ",mapLink:"https://maps.app.goo.gl/Akp8DajY5UB8HJ4a6",phone:"07511845567"},
+{id:54,name:"زانکۆ-٢",address:"جادەی زانکۆ پێشی بەشە ناوخۆیی 18ی شوباتی کچان",mapLink:"https://maps.app.goo.gl/4BJ9h6LsG3dM1J7H8",phone:"07517419165"},
+{id:55,name:"زانکۆ-١",address:"ناو گەڕەکی زانکۆ فەرعی یاریگای 92",mapLink:"https://maps.app.goo.gl/MHcPverLJWqeTyox9?g_st=iw",phone:"07517411834"},
+{id:56,name:"زەیتون-٢",address:"جادەی کۆڕنیش",mapLink:"https://maps.app.goo.gl/p3uTAwsW17dEq75K8",phone:"07518004288"},
+{id:57,name:"ژیان-٣",address:"بەرامبەر قوتابخانەى حاجی یەحیا",mapLink:"https://maps.app.goo.gl/me7DXf4HaFMT8r6w8",phone:"07517423678"},
+{id:58,name:"ژیان-٢",address:"بەرام بەر پاڕکی ژیان",mapLink:"https://maps.app.goo.gl/eDPj31Jf2bsn7Eqb6",phone:"07517411847"},
+{id:59,name:"ژیان-١",address:"گەڕەکی ژیان سەر جووت سایدی کەرکوک",mapLink:"https://maps.app.goo.gl/yBWpJfw8tootG8WbA",phone:"07517411846"},
+{id:60,name:"زیلان",address:"گەڕەکی زەیتون ڕێزی کۆمەڵگەى پزیشکى سپارتا",mapLink:"https://maps.app.goo.gl/RgUcGzbtGt1j6EUJ6",phone:"07517423714"},
+{id:61,name:"ژین دارەتوو",address:"ڕێزی قوتابخانەی ژین",mapLink:"https://maps.app.goo.gl/eMu5J1Qt8kFb3oeU8",phone:"07518014742"},
+{id:62,name:"سەربەستی-٢",address:"گەڕەکی سەربەستی فەرعی مطعم فطيرة ومنقوشة",mapLink:"https://maps.app.goo.gl/AH58xWDdjHQpG8sT7",phone:"07511845574"},
+{id:63,name:"سەروەران-٢",address:"گەڕەکی سەروەران نزیک ئاسایشی هەڤاڵان",mapLink:"https://maps.app.goo.gl/Lao8VzbwtSgwUdnu6",phone:"07517450553"},
+{id:64,name:"سەفین",address:"تەنیشت مديرية دفاع مدني شقلاوة",mapLink:"https://maps.app.goo.gl/jjQNRXb5PWq4LPrR7",phone:"07517411893"},
+{id:65,name:"سۆران-9",address:"سەرووی قوتابخانەی چەمی ڕێزان",mapLink:"https://maps.app.goo.gl/iXk1WY18rALKncJ98",phone:"0750 700 5247"},
+{id:65,name:"سۆران-٨",address:"ڕێزی داخیلی حاجی فازل",mapLink:"https://maps.app.goo.gl/RmPTXpJ2RotkjE218",phone:"07518020911"},
+{id:66,name:"سۆران-٧",address:"ڕێزی نۆرینگەی پزیشکی زۆزک",mapLink:"https://maps.app.goo.gl/sAj9yMrmYqapGD5a9",phone:"07517411967"},
+{id:67,name:"سۆران-٦",address:"بەرامبەر مزگەوتی گەورەی دیانا",mapLink:"https://maps.app.goo.gl/toqX26JJu8jMXCWy8",phone:"07517450564"},
+{id:68,name:"سۆران-٥",address:"بەرامبەر رۆنگۆرو سێرڤسی رۆژ",mapLink:"https://maps.app.goo.gl/VzkTDDqRsX2w7dJd8",phone:"07511845579"},
+{id:69,name:"سۆران-٤",address:"بەرامبەر دەرمانخانەی سۆرانی خێرخوازی",mapLink:"https://maps.app.goo.gl/QH3QcZDBSUqcGmW76",phone:"07511845575"},
+{id:70,name:"سۆران-٣",address:"ڕێزی نوڕینگە و تاقیگەی پزیشکی چارە",mapLink:"https://maps.app.goo.gl/kLKdccJpmvVjWHbA9",phone:"07517450564"},
+{id:71,name:"سۆران-٢",address:"بەرامبەر هۆتێلی دیانا پالاس",mapLink:"https://maps.app.goo.gl/PJdf9BnwB53xN5EG6",phone:"07517419173"},
+{id:72,name:"سۆران-١",address:"ڕێزی قسم داخیلی رەسە",mapLink:"https://maps.app.goo.gl/pVSBB59JcVKHTHsn7",phone:"07517419167"},
+{id:73,name:"سۆڕک",address:"جادەی سەرەکی شەقڵاوە جووت سایدی سەرمەیدان",mapLink:"https://maps.app.goo.gl/wA1W5aeES5kh5DDk6",phone:"07517411896"},
+{id:74,name:"شادی",address:"بازاری شادی ڕێزی مزگەوتی حاجی عه‌بدوڵا نۆغه‌رانی",mapLink:"https://maps.app.goo.gl/P91yaSKWZkV95ARe8",phone:"07517411861"},
+{id:75,name:"شارەوانی",address:"ڕێزی بەرێوبەرایەتی پۆستەی هەولێر",mapLink:"https://maps.app.goo.gl/sUWpQTVRTj1KvQoe8",phone:"07517411836"},
+{id:76,name:"شاوێس",address:"بازاڕی شاوێس تەنیشت شارەوانی شاوێش",mapLink:"https://maps.app.goo.gl/o3iUJWwGCwaUk8nC6",phone:"07511845587"},
+{id:77,name:"شەقڵاوە-٢",address:"سەر جادەی سەرمەیدان",mapLink:"https://maps.app.goo.gl/EMYYp9MPnam6Pbft5",phone:"07517411938"},
+{id:78,name:"شەقڵاوە-٤",address:"بەرامبەر بەنزینخانەی شەقڵاوە",mapLink:"https://maps.app.goo.gl/dWQfTeiabXuTrCmt6",phone:"07517419143"},
+{id:79,name:"شوقلاوە-٥",address:"بەرامبەر قوتابخانەی دەنگارە",mapLink:"https://maps.app.goo.gl/S9WwzDfSbWnVTYVc7",phone:"07517411792"},
+{id:80,name:"شهد",address:"بەڕامبەر مەلەوانگەی کوردستان",mapLink:"https://maps.app.goo.gl/YuF8wCLb7RWsaSnQ7",phone:"07507411863"},
+{id:81,name:"سەفاومەڕوا",address:"ڕێزی مزگەوتی سەفاومەڕوا",mapLink:"https://maps.app.goo.gl/rEbLTx81DKaXRSS89",phone:"07517411867"},
+{id:82,name:"عەدالە",address:"جادەی عەدالە تەنیشت کەباب ڕابەر",mapLink:"https://maps.app.goo.gl/uQSzy79crWJsLrB66",phone:"07517450538"},
+{id:83,name:"عولماء",address:"تەنیشت مزگەوتی حاجی یونس",mapLink:"https://maps.app.goo.gl/ko1NDdfRm1m4LhBK6",phone:"07517411871"},
+{id:84,name:"عەنکاوە - 3",address:"ڕێزی Versay liquor shop",mapLink:"https://maps.app.goo.gl/njpp7cZC5R5F3VGh7",phone:"07517423679"},
+{id:85,name:"عەنکاوە -2",address:"جادەی عەنکاوە سەر 120",mapLink:"https://maps.app.goo.gl/AmkReK76WMvcvvsv9",phone:"07518014744"},
+{id:86,name:"عەنکاوە-5",address:"جووت سایدی دهۆک بەرامبەر پاڤیلۆن",mapLink:"https://maps.app.goo.gl/oE6qJRC3wMTQ5ATa6",phone:"07517411968"},
+{id:87,name:"فەرمانبەران-2",address:"Guli Harwan pharmacy تەنیشت سەیدەلیەی",mapLink:"https://maps.app.goo.gl/bBugiWrzfEr2gm749",phone:"07511845565"},
+{id:88,name:"قەڵادزێ-١",address:"بەرامبەر پێشانگای پێشەوا",mapLink:"https://maps.app.goo.gl/GsUyeNWrvwxfbQ2k6",phone:"17517419156"},
+{id:89,name:"قەڵادزێ-2",address:"ڕێزی Dosty Private Hospital",mapLink:"https://maps.app.goo.gl/wsPkPQYndSSPNhAa8",phone:"07517423688"},
+{id:90,name:"قەڵادزێ-٣",address:"تەنیشت قوتابخانەی بنەڕەتی بڵفەت",mapLink:"https://maps.app.goo.gl/MQVHi1AQJEeE7ci37",phone:"07517450557"},
+{id:91,name:"قەڵادزێ-٥",address:"تەنیشت پێشانگای ئاشتی",mapLink:"https://maps.app.goo.gl/FdRkK6i3ZXo5YBAy9",phone:""},
+{id:92,name:"قوشتەپە-١",address:"تەنیشت قوتابخانەی قوشتەپە",mapLink:"https://maps.app.goo.gl/W454afyJtJYbewgY6",phone:"07517423687"},
+{id:93,name:"گەنموجۆ",address:"فەرعی هۆتێل کریستاڵ",mapLink:"https://maps.app.goo.gl/BXbKiBY1rfoL4qTu6",phone:"07517411831"},
+{id:94,name:"کەورگۆسک",address:"تەنیشت سەیدەلیەی سەروەران",mapLink:"https://maps.app.goo.gl/eA6Hnmv269cY4wRs6",phone:"17511845546"},
+{id:95,name:"کەسنەزان-١",address:"جووت سایدی هەزە",mapLink:"https://maps.app.goo.gl/p3gtbAmqMwpZc5bp9",phone:"07517411858"},
+{id:96,name:"کەسنەزان - ٢",address:"بەرامبەر ماجدی لاند",mapLink:"https://maps.app.goo.gl/cBTHBhC48TNTzFsG6",phone:"07517423675"},
+{id:97,name:"گەنجان ستی",address:"دەرگای دووەمی گەنجان ستی",mapLink:"https://maps.app.goo.gl/XSMo2KUZ8556W8Kq9",phone:"07517411951"},
+{id:98,name:"کۆچ",address:"تەنیشت گەس سەنگەر",mapLink:"https://maps.app.goo.gl/ck3RYNY6PVjH8zSp9",phone:"07517411833"},
+{id:99,name:"گوڵانی نوێ",address:"تەنیشت مزگەوتی شيخ حسن مموندي",mapLink:"https://maps.app.goo.gl/2aMe4u7aree4K7Qp6",phone:"07517411807"},
+{id:100,name:"گۆڕەتوو",address:"بەرامبەر سەنتەری ددان",mapLink:"https://maps.app.goo.gl/DyM7RgLdjdczVAsT8",phone:"07518014734"},
+{id:101,name:"کۆڕێ",address:"ڕێگای پیرمام کۆڕی",mapLink:"https://maps.app.goo.gl/ogtkittTkgqKmbWY9",phone:"07511845535"},
+{id:102,name:"کورانی نوێ",address:"ڕێگای بەحرکە",mapLink:"https://maps.app.goo.gl/CWxoUyUreFdV7ES69",phone:"07517411783"},
+{id:103,name:"کۆیە-١",address:"بەرامبەر کەبابخانەی سیدرا",mapLink:"https://maps.app.goo.gl/fGZ2gmNYF9LswhVw5",phone:"07517419145"},
+{id:104,name:"کۆیە-٢",address:"جادەی ئیسکان",mapLink:"https://maps.app.goo.gl/mDHVzco437oLhQUp7",phone:"07517411917"},
+{id:105,name:"کۆیە-٣",address:"جادەی مەلعەبی کۆیە",mapLink:"https://maps.app.goo.gl/dvamweVmeEjozR316",phone:"07517411979"},
+{id:106,name:"کۆیە-٤",address:"نزیک کۆلێژەکانی کۆیە",mapLink:"https://maps.app.goo.gl/x3Zgsx41sfWVGmuF8",phone:"07517411851"},
+{id:107,name:"کوێستان",address:"بەرام بەر مزگەوتی مەلا مەسعود",mapLink:"https://maps.app.goo.gl/apRpDe2eG42HAhAW9",phone:"07517411872"},
+{id:108,name:"لانەستی",address:"تەنیشه عقارات لانة ستي",mapLink:"https://maps.app.goo.gl/aDWsDkRoFAGSCu6T9",phone:"07517411855"},
+{id:109,name:"لاوان-١",address:"بەرامبەر پۆلیسی فریاکەوتن",mapLink:"https://maps.app.goo.gl/wb1uY7aqUtTqceLC9",phone:"07517411841"},
+{id:110,name:"لاوان-٢",address:"ڕیزی مەکتەب نۆڤا",mapLink:"https://maps.app.goo.gl/XE9s9VUCD3xae8Fq9",phone:"07517411802"},
+{id:111,name:"لاوان-٣",address:"فەرعی لاوان ١ دەچیە خوارەوە",mapLink:"https://maps.app.goo.gl/qXPmmrG2YQcouRnXA",phone:"07517423708"},
+{id:112,name:"مامەجەلکە",address:"بەرامبەر مزگەوتی میر رۆستەم",mapLink:"https://maps.app.goo.gl/21GoozgfZ157DAEo7",phone:"07517419181"},
+{id:113,name:"مامزاوە",address:"بەرامبەر بەنزینخانەی مامزاوە",mapLink:"https://maps.app.goo.gl/gQvVCJzygkjfoe9G7",phone:"07517423716"},
+{id:114,name:"مامۆستایان ستی -١",address:"تەنیشت سەیدەلیەی مامۆستایان",mapLink:"https://maps.app.goo.gl/zw2MWF87GKp793JfA",phone:"07517450523"},
+{id:115,name:"مامۆستایان ستی -٢",address:"خوارو یاریگای شاری مامۆستایان",mapLink:"https://maps.app.goo.gl/nn6YSCi33CJbXcZK8",phone:"07517411870"},
+{id:116,name:"مامۆستایان ستی -٣",address:"ڕەسەن تاوەرز",mapLink:"https://maps.app.goo.gl/nn6YSCi33CJbXcZK8",phone:"07501169755"},
+{id:117,name:"مامۆستایان",address:"جووت سایدی لەنگە بەرامبەر پەیمانگای پۆلی 12",mapLink:"https://maps.app.goo.gl/n31T5D5p3qqsPuG17",phone:"07517450539"},
+{id:118,name:"مەلایان",address:"تەنیشت مزگەوتی مەلا قادر",mapLink:"https://maps.app.goo.gl/oUVgLGHRtp13e3aa8",phone:"07517411894"},
+{id:119,name:"موفتی-٣",address:"بیستی پشتی رووداو",mapLink:"https://maps.app.goo.gl/FFttb2bkN3dUqYMw6",phone:"07511845564"},
+{id:120,name:"مەلائۆمەر",address:"جادەی کۆنی مەلائۆمەر",mapLink:"https://maps.app.goo.gl/jjd6ZC4kohip2obW9",phone:"07517450547"},
+{id:121,name:"نەورۆز",address:"ڕێزی مزگەوتی شەهیدێن",mapLink:"https://maps.app.goo.gl/rpZqNroiVnE6aySD6",phone:"07517411865"},
+{id:122,name:"نەورۆز ستی",address:"بەرامبەر نەخۆشخانەی فریاکەوتنی ڕۆژئاوا",mapLink:"https://maps.app.goo.gl/VdwTZoHcnDXdZAC57",phone:"07517411798"},
+{id:123,name:"نیشتیمان",address:"تەنیشت مزگەوتی مزگەوتی ڕفاعی",mapLink:"https://maps.app.goo.gl/Yt6yubrrh5BuMzas5",phone:"07517450561"},
+{id:124,name:"نوسەران",address:"تەنیشت مزگەوتی Shex Muhammed Shahoy",mapLink:"https://maps.app.goo.gl/ToQiaRysc2bB85qSA",phone:"07517411873"},
+{id:125,name:"هاودیان-٢",address:"سەر رێگای مێرگەسۆر سۆران",mapLink:"https://maps.app.goo.gl/7EDe4ih3nES9iUJy7",phone:"07518014760"},
+{id:126,name:"هەریر-١",address:"تەنیشت مزگەوتی تەوحید",mapLink:"https://maps.app.goo.gl/aK6cRFeAg77hjGCc8",phone:"07517411791"},
+{id:127,name:"هەریر-٢",address:"تەنیشت قوتابخانەی بنەڕەتی کازیوە",mapLink:"https://maps.app.goo.gl/7fi2gDtEqt2yLj5B7",phone:"07517416419"},
+{id:128,name:"هەریر-٣",address:"بەرامبەر کۆمەلگای شاینی ناحکومی",mapLink:"https://maps.app.goo.gl/FLHufavVkZdRBLjG8",phone:"07517416419"},
+{id:129,name:"هەڤاڵان فرێش",address:"تەنیشت قوتابخانەی سابیس",mapLink:"https://maps.app.goo.gl/RxRx3QYfB4puJiMx9",phone:"07517411853"},
+{id:130,name:"هەولێری نوێ-١",address:"بەرامبەر نەمامگەکان",mapLink:"https://maps.app.goo.gl/ehNRDreEmZgf4K3n7",phone:"07517411856"},
+{id:131,name:"هەولێری نوێ-٢",address:"ڕێزی مەتعەم سۆفی فەرەج",mapLink:"https://maps.app.goo.gl/jZn2Ee4ryKpkNAhg6",phone:"07517411857"},
+{id:132,name:"هۆڵەندا",address:"جادەی بنەسڵاوە مزگەوتی ئیسرا و میعراج",mapLink:"https://maps.app.goo.gl/57gE2fKCmXEE3Lzx6",phone:"07517411838"},
+{id:133,name:"هیران ستی",address:"جادەی لاوان بەرامبەر مزگەوتی باخی بەهەشت",mapLink:"https://maps.app.goo.gl/WKoYvFwGNEiFXVCd7",phone:"07511845560"},
+{id:134,name:"ڕانیە-١",address:"شەقامی نەورۆز",mapLink:"https://maps.app.goo.gl/6ktfnVoihZE3z4XQA",phone:"07517450551"},
+{id:135,name:"ڕانیە-٢",address:"سەر جادەی سەرکەپکان",mapLink:"https://maps.app.goo.gl/L6sV54wDgt41oL3R7?g_st=ic",phone:"07517450548"},
+{id:136,name:"ڕانیە-٣",address:"بەرامبەر قوتابخانەی بنەڕەتی بابە گوڕگوڕ",mapLink:"https://maps.app.goo.gl/roBFceRiC6sPDmuh8",phone:"07517411960"},
+{id:137,name:"ڕانیە-٤",address:"جوت سایدی کێوەڕەش تەنیشت مزگەوتی خدر جاف",mapLink:"https://maps.app.goo.gl/TWmp3LUun7DqE9Gk6",phone:"07517411946"}
+];
+let markets=[...ALL_MARKETS], filteredMarkets=[...markets], currentView="grid";
+function escapeHtml(str){if(!str)return'';return str.replace(/[&<>]/g,m=>{if(m==='&')return'&amp;';if(m==='<')return'&lt;';if(m==='>')return'&gt;';return m;});}
+function showToast(msg){const t=document.getElementById('toastMsg');document.getElementById('toastText').innerText=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function openGoogleMaps(link,name){if(link){window.open(link,'_blank');showToast('📍 '+name+' - Opening Google Maps');}}
+function callPhone(phone,name){if(phone){window.location.href='tel:'+phone;showToast('📞 Calling '+name);}else showToast('No phone number for '+name);}
+function updateFilteredAndRender(){
+    const term=document.getElementById('searchInput').value.toLowerCase().trim();
+    // search only by name
+    filteredMarkets = term ? markets.filter(m => m.name.toLowerCase().includes(term)) : [...markets];
+    if(currentView==='grid')renderGrid(filteredMarkets);
+    else renderTable(filteredMarkets);
+    document.getElementById('totalCount').innerText=filteredMarkets.length;
+}
+function renderGrid(data){const container=document.getElementById('gridContainer');if(!data.length){container.innerHTML='<div style="text-align:center;padding:60px;background:white;border-radius:32px;">🏪 No matching markets.</div>';return;}
+container.innerHTML=data.map(m=>`
+<div class="market-card" data-id="${m.id}" data-link="${escapeHtml(m.mapLink)}" data-name="${escapeHtml(m.name)}" data-phone="${escapeHtml(m.phone||'')}">
+<div class="card-header"><div class="card-icon"><img src="teammartmaps.jpg" onerror="this.src='https://placehold.co/55x55/0066CC/white?text=TM'"></div><div class="card-title">${escapeHtml(m.name)}</div></div>
+<div class="address-line"><i class="fas fa-map-pin"></i><span>${escapeHtml(m.address)}</span></div>
+<div class="card-footer">
+<button class="nav-btn open-map-btn" data-link="${escapeHtml(m.mapLink)}" data-name="${escapeHtml(m.name)}"><i class="fas fa-map-marked-alt"></i> Open Map</button>
+${m.phone?`<button class="nav-btn phone-btn" data-phone="${escapeHtml(m.phone)}" data-name="${escapeHtml(m.name)}"><i class="fas fa-phone"></i> ${escapeHtml(m.phone)}</button>`:''}
+</div>
+<div class="card-badge"><img src="teammartmaps.jpg" onerror="this.style.display='none'"><span>TM</span></div>
+</div>`).join('');attachEvents();}
+function renderTable(data){const tbody=document.getElementById('tableBody');if(!data.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;">No markets</td></tr>';return;}
+tbody.innerHTML=data.map(m=>`<tr data-id="${m.id}" data-link="${escapeHtml(m.mapLink)}" data-name="${escapeHtml(m.name)}" data-phone="${escapeHtml(m.phone||'')}"><td><img src="teammartmaps.jpg" class="table-logo" onerror="this.src='https://placehold.co/36x36/0066CC/white?text=TM'"> ${escapeHtml(m.name)}</td><td>${escapeHtml(m.address)}</td><td>${m.phone?`<button class="nav-btn phone-btn" data-phone="${escapeHtml(m.phone)}" data-name="${escapeHtml(m.name)}"><i class="fas fa-phone"></i> ${escapeHtml(m.phone)}</button>`:'—'}</td><td><button class="nav-btn open-map-btn" data-link="${escapeHtml(m.mapLink)}" data-name="${escapeHtml(m.name)}" style="padding:4px 12px;font-size:12px;"><i class="fas fa-map-marked-alt"></i> Open</button></td></tr>`).join('');attachEvents();}
+function attachEvents(){
+document.querySelectorAll('.open-map-btn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();const link=btn.dataset.link,name=btn.dataset.name;if(link)openGoogleMaps(link,name);}));
+document.querySelectorAll('.phone-btn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();const phone=btn.dataset.phone,name=btn.dataset.name;callPhone(phone,name);}));
+document.querySelectorAll('.market-card, #tableBody tr').forEach(el=>el.addEventListener('click',e=>{if(e.target.closest('button')||e.target.closest('a'))return;const link=el.dataset.link,name=el.dataset.name;if(link)openGoogleMaps(link,name);}));
+}
+document.getElementById('searchInput').addEventListener('input',()=>updateFilteredAndRender());
+document.getElementById('gridToggle').addEventListener('click',()=>{currentView='grid';document.getElementById('gridContainer').style.display='grid';document.getElementById('tableContainer').classList.remove('active-view');document.getElementById('gridToggle').classList.add('active');document.getElementById('tableToggle').classList.remove('active');updateFilteredAndRender();});
+document.getElementById('tableToggle').addEventListener('click',()=>{currentView='table';document.getElementById('gridContainer').style.display='none';document.getElementById('tableContainer').classList.add('active-view');document.getElementById('tableToggle').classList.add('active');document.getElementById('gridToggle').classList.remove('active');updateFilteredAndRender();});
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('preloader').classList.add('fade-out'),700);updateFilteredAndRender();document.getElementById('gridContainer').style.display='grid';});
+</script>
+</body>
+</html>
